@@ -14,6 +14,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::namespace('Api')->group(function(){
+   Route::prefix('auth')->group(function(){
+       // login function in the AuthController will be called PARAM2 for post
+       // whenever we will make a request to the 'login' end point PARAM1 for post 
+       // similarly for the signup
+    Route::post('login', 'AuthController@login');
+
+    Route::post('signup', 'AuthController@signup');
+   });
+
+
+   // We define middleware for all other routes, and OAuth will be used for it 
+
+   Route::group([
+       'middleware' => 'auth:api'
+   ], function(){
+    Route::get('helloworld', 'AuthController@index');
+   });
 });
