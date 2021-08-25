@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +20,9 @@ Route::namespace('Api')->group(function(){
        // login function in the AuthController will be called PARAM2 for post
        // whenever we will make a request to the 'login' end point PARAM1 for post 
        // similarly for the signup
-    Route::post('login', 'AuthController@login');
+    Route::post('login', [AuthController::class,'login']);
 
-    Route::post('signup', 'AuthController@signup');
+    Route::post('signup', [AuthController::class,'signup']);
    });
 
 
@@ -30,6 +31,7 @@ Route::namespace('Api')->group(function(){
    Route::group([
        'middleware' => 'auth:api'
    ], function(){
-    Route::get('helloworld', 'AuthController@index');
+    Route::get('helloworld', [AuthController::class,'index']);
+    Route::post('logout', [AuthController::class,'logout']);
    });
 });

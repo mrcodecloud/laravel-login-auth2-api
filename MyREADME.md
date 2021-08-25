@@ -27,6 +27,10 @@
     - Before defining a route we need to define a controller using the command "php artisan make:controller /Api/AuthController"
     - Above command will result in a folder /app/Http/Controllers/Api/AuthController.php where we will write our functions 
     for the authentication 
+    - We will write our authentication code here, also we will be getting the token here in AuthController.php class 
+    - We send this token at the login time, and this token will be required by other api calls in the header part with Authorization key, and an additional keyword in the value 'bearer' at the start 
+    - When we logout we provide the token which is invalidated 
     - We will make changes in the api.php, and the AuthController.php for routes, and functions 
 - Now all the other routes will be authenticated using OAuth, and Middleware will be used for it. 
+- 
 

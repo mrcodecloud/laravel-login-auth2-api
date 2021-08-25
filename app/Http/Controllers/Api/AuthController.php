@@ -4,22 +4,71 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     //Login Function 
 
-    public function login(){
-        echo "Logiin End point requested";
+    public function login(Request $request){
+
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+
+        $credentials = request(['email', 'password']);
+
+        if(!Auth::attempt($credentials)){
+            return response()-> json([
+                'message'=> "Invalid login credentials"
+            ], 401);
+        } 
+
+        $user = $request->user();
+        $token = $user->createToken('Access Token');
+        $user->access_token = $token -> accessToken;
+        return response()->json([
+            "user" =>$user
+        ],200);
+         
     }
 
-    //Login Function 
+    //Signup Function 
 
-    public function signup(){
-        echo 'Signup End point requested';
+    public function signup(Request $request){
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string|confirmed',
+        ]);
+
+        $user = new User([
+            'name' => $request -> name,
+            'email' => $request -> email,
+            'password' => bcrypt($request -> password)
+        ]);
+
+        $user->save();
+
+        return response() -> json([
+            "message" => "User registered successfully"
+        ], 201);
+
+    }
+
+     //Logout Function 
+
+     public function logout(Request $request){
+        $request->user()->token()->revoke();
+        return response() -> json([
+            "message" => "User Logged Out successfully"
+        ], 200);
+
     }
 
     public function index(){
-        echo 'Hellow World';
+        echo 'Hello World';
     }
 }
